@@ -3,11 +3,17 @@
     
 <head>
     <link rel="stylesheet" href ={{ url_for('static', filename='style.css') }} />
+    <title>My Music</title>
 </head>
 <body>
-   <h1>{{name}}</h1>
-    <h2>{{artist}}</h2>
-   <h3><a href={{preview_url}}> Preview </a><h3>
-    <img src ={{picture}} />
+    <h1>{{name}}</h1>
+    <h2>By {{artist}}</h2>
+    <img src ={{picture}} class="image"/>
+    <div align="center">
+    <audio controls>
+        <source src="{{preview}}" type="audio/mp4">
+        <p>no preview avabile</p>
+    </audio>
+    </div>
 </body>
 </html>
