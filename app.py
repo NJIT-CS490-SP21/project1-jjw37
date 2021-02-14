@@ -57,6 +57,31 @@ except:
     song_url = "no preview avaible"
 
 
+GENIUS_URL = 'https://api.genius.com'
+GENIUS_TOK = os.getenv('GEN_TOK')
+
+gen_headers = {
+    'Authorization': 'Bearer {token}'.format(token = GENIUS_TOK)
+}
+
+gen_search = song_artist + ' ' + song_name
+
+print(gen_search)
+
+gen_param = {
+    'q': gen_search
+}
+
+gen_search_url = '/search'
+
+gen_request = requests.get(GENIUS_URL + gen_search_url, headers = gen_headers, params = gen_param)
+gen_data = gen_request.json()
+
+print(gen_data['response']['hits'][0]['result']['full_title'])
+
+
+
+
 @app.route('/')
 def Spotify_Display():
     return render_template(
@@ -69,7 +94,7 @@ def Spotify_Display():
     
 app.run(
     port=int(os.getenv('PORT', 8080)),
-    debug=True
+    #debug=True
 )
 
 
