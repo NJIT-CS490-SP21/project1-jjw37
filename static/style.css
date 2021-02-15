@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background-color: #070707;
     color: white;
 }
 
@@ -7,13 +7,17 @@ h1 {
     font-size: 50px;
 }
 
-h1, h2 {
+h1, h2, p {
     text-align: center;
     margin: 0;
 }
 
 h2 {
     font-style: italic;   
+}
+
+p {
+    font-size: 30px;
 }
 
 .image {

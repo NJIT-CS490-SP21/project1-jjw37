@@ -17,7 +17,10 @@ AUTH_RES = requests.post( AUTH_URL, {
     'client_secret': CLIENT_KEY,
 })
 AUTH_DATA = AUTH_RES.json()
-token = AUTH_DATA['access_token']
+try:
+    token = AUTH_DATA['access_token']
+except:
+    token = "nodda"
 headers = {
     'Authorization': 'Bearer {token}'.format(token = token)
 }
@@ -44,17 +47,22 @@ song_select = random.randint(0,5)
 
 
 
-song_name = 'no data'
-song_artist = 'no data'
-song_pic = 'no data'
-song_url = 'no data'
-song_name = artist_data['tracks'][song_select]['name']
-song_artist = artist_data['tracks'][song_select]['artists'][0]['name']
-song_pic = artist_data['tracks'][song_select]['album']['images'][0]['url']
+try:
+    song_name = artist_data['tracks'][song_select]['name']
+except:
+    song_name = '[PLACEHOLDER]'
+try:
+    song_artist = artist_data['tracks'][song_select]['artists'][0]['name']
+except:
+    song_artist = 'could not get data'
+try:
+    song_pic = artist_data['tracks'][song_select]['album']['images'][0]['url']
+except:
+    song_pic = 'https://i.redd.it/mpvq6gsxwz411.png'
 try:
     song_url = artist_data['tracks'][song_select]['preview_url']
 except:
-    song_url = "no preview avaible"
+    song_url = "https://i.scdn.co/image/4295b5ff74d4f944367144acbe616b6f62d20b17"
 
 
 GENIUS_URL = 'https://api.genius.com'
@@ -65,21 +73,27 @@ gen_headers = {
 }
 
 gen_search = song_artist + ' ' + song_name
-
-print(gen_search)
-
-gen_param = {
+gen_search_param = {
     'q': gen_search
 }
 
 gen_search_url = '/search'
+gen_search_request = requests.get(GENIUS_URL + gen_search_url, headers = gen_headers, params = gen_search_param)
+gen_search_data = gen_search_request.json()
 
-gen_request = requests.get(GENIUS_URL + gen_search_url, headers = gen_headers, params = gen_param)
-gen_data = gen_request.json()
+try:
+    gen_song_id = gen_search_data['response']['hits'][0]['result']['id']
+except:
+    gen_song_id = "d"
 
-print(gen_data['response']['hits'][0]['result']['full_title'])
+gen_song_url = '/songs/'
+gen_song_request = requests.get(GENIUS_URL + gen_song_url + str(gen_song_id), headers = gen_headers)
+gen_song_data = gen_song_request.json()
 
-
+try:
+    song_lyrics = gen_song_data["response"]["song"]["url"]
+except:
+    song_lyrics = 'https://genius.com/Sia-chandelier-lyrics'
 
 
 @app.route('/')
@@ -89,7 +103,8 @@ def Spotify_Display():
         name = song_name,
         artist = song_artist,
         preview = song_url,
-        picture = song_pic
+        picture = song_pic,
+        lyrics = song_lyrics
     )
     
 app.run(
